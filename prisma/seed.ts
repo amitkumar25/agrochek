@@ -26,10 +26,10 @@ async function main() {
     const hashedPassword = await bcrypt.hash(defaultPassword, 10)
     
     const defaultUser = await prisma.user.upsert({
-      where: { email: 'admin@example.com' },
+      where: { email: 'amitsrdi2021@gmail.com' },
       update: {},
       create: {
-        email: 'admin@example.com',
+        email: 'amitsrdi2021@gmail.com',
         password: hashedPassword,
         name: 'Admin User',
         imageUrl: 'https://avatar.vercel.sh/Admin%20User.png?text=AD'
