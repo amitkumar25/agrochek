@@ -217,9 +217,14 @@ export const userService = new CrudService('user');
  * Transaction utilities
  */
 export async function executeTransaction<T>(
-  operations: (tx: Prisma.TransactionClient) => Promise<T>
+  operations: (tx: Prisma.TransactionClient) => Promise<T>,
+  timeout: number = 15000 // 15 seconds default timeout
 ): Promise<T> {
-  return await prisma.$transaction(operations);
+  return await prisma.$transaction(operations, {
+    maxWait: 5000, // default: 2000ms
+    timeout: timeout, // default: 5000ms
+    isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted
+  });
 }
 
 /**

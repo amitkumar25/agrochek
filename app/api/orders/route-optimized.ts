@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import prisma from "@/lib/db";
-import { InvoiceStatus, OrderStatus, SampleStatus } from "@/lib/generated/prisma-client";
+import { InvoiceStatus, OrderStatus, SampleStatus, Prisma } from "@/lib/generated/prisma-client";
 import { generateSampleId } from "@/lib/utils/sampleIdGenerator";
 import { z } from "zod";
 import { unstable_cache } from 'next/cache';
@@ -419,6 +419,10 @@ export async function POST(request: Request) {
             });
 
             return order.id;
+        }, {
+            maxWait: 5000, // Maximum time to wait for a transaction slot (5s)
+            timeout: 30000, // Maximum time the transaction can run (30s)
+            isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted // Use read committed isolation level
         });
 
         // Fetch complete order data outside transaction
